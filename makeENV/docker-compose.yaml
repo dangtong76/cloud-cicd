@@ -1,9 +1,21 @@
 version: "3.8"
 name: "aws-cicd-practice"
-
 services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"     # Jenkins UI 포트
+      - "50000:50000"   # 에이전트 연결 포트
+    volumes:
+      - jenkins-home:/var/jenkins_home  # Jenkins 데이터를 영구적으로 저장
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker를 Jenkins에서 사용 가능하게 설정
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # 초기 설정 마법사 비활성화 옵션
+    
   server:
-    image: dangtong/aws-cicd-env
+    image: dangtong76/cloud-cicd
     container_name: "ide"
     networks:
       - kind_network
@@ -14,15 +26,13 @@ services:
     working_dir: /code
     ports:
       - "8444:8443"
+      - "5500:5500"
     secrets:
       - code-server-password
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - cloud-cicd-src:/code/cloud-cicd-src
       - vscode:/config
-    # depends_on:
-    #   server:
-    #     condition: service_completed_successfully
 networks:
   kind_network:
     name: kind
@@ -35,6 +45,9 @@ volumes:
   vscode:
     external: true
     name: vscode
+  jenkins-home:
+    external: true
+    name: jenkins-home
 secrets:
   code-server-password:
     file: password.txt
