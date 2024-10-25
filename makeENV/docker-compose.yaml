@@ -1,9 +1,9 @@
 version: "3.8"
-name: "aws-cicd_practice"
+name: "aws-cicd-practice"
 
 services:
   server:
-    image: dangtong/aws-cicd_env
+    image: dangtong/aws-cicd-env
     container_name: "ide"
     networks:
       - kind_network

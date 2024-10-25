@@ -25,8 +25,8 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/doc
 
 RUN apt-get update && apt-get install -y docker-ce docker-ce-cli
 
-# Install AWS CLI from `amazon/aws-cli:2.17.9` image
-COPY --from=amazon/aws-cli:2.17.9 /usr/local/aws-cli/v2 /usr/local/aws-cli/v2
+# Install AWS CLI from `amazon/aws-cli` image
+COPY --from=amazon/aws-cli /usr/local/aws-cli/v2 /usr/local/aws-cli/v2
 RUN ln -s /usr/local/aws-cli/v2/current/bin/aws /usr/local/bin/aws
 RUN ln -s /usr/local/aws-cli/v2/current/bin/aws_completer /usr/local/bin/aws_completer
 
